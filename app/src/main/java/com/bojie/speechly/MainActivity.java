@@ -1,16 +1,25 @@
 package com.bojie.speechly;
 
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    TextView mTextTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mTextTime = (TextView) findViewById(R.id.textView);
+        AssetManager assetManager = getAssets();
+        Typeface customFont = Typeface.createFromAsset(assetManager, "fonts/source_sans_pro.light.ttf");
+        mTextTime.setTypeface(customFont);
     }
 
     @Override

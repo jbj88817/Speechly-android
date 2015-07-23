@@ -15,8 +15,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:layout_alignParentTop="true"
+        android:layout_marginBottom="-48dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="99dp"
+        android:layout_above="@+id/textView"
         android:src="@drawable/clock"/>
 
     <TextView
@@ -24,20 +25,22 @@
         android:layout_height="wrap_content"
         android:text="0.00"
         android:id="@+id/textView"
-        android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_marginTop="27dp"
-        android:textColor="#ffffff"
-        android:textSize="100sp"/>
+        android:textColor="#616161"
+        android:textSize="144sp"/>
 
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New ToggleButton"
         android:id="@+id/toggleButton"
+        android:textOff=""
+        android:textOn=""
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"/>
+        android:layout_marginTop="64dp"
+        android:background="@drawable/toggle_selector"/>
 
 
 </RelativeLayout>
