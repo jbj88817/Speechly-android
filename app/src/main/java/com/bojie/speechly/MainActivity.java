@@ -2,15 +2,23 @@ package com.bojie.speechly;
 
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener{
 
-    TextView mTextTime;
+    private TextView mTextTime;
+    private Handler mHandler;
+    private long timeRemaining = 5000;
+    private ToggleButton mToggleButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +28,27 @@ public class MainActivity extends AppCompatActivity {
         AssetManager assetManager = getAssets();
         Typeface customFont = Typeface.createFromAsset(assetManager, "fonts/source_sans_pro.light.ttf");
         mTextTime.setTypeface(customFont);
+        // ToggleButton
+        mToggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+        mToggleButton.setOnCheckedChangeListener(this);
+
+        mHandler = new Handler();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.d("Bojie", "run was called");
+                timeRemaining -= 1000;
+                if (timeRemaining > 0) {
+                    mHandler.postDelayed(this, 1000);
+                }
+
+            }
+        };
+
+        mHandler.postDelayed(runnable, 1000);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -42,5 +70,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            Toast.makeText(this, "ON", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "OFF", Toast.LENGTH_SHORT).show();
+        }
     }
 }
