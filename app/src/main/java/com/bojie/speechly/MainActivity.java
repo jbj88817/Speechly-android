@@ -1,19 +1,25 @@
 package com.bojie.speechly;
 
+import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener{
+public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener,
+        DialogInterface.OnClickListener{
 
     private TextView mTextTime;
     private Handler mHandler;
@@ -76,8 +82,29 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
             Toast.makeText(this, "ON", Toast.LENGTH_SHORT).show();
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View view = inflater.inflate(R.layout.user_input, null);
+            EditText textUserInput = (EditText) view.findViewById(R.id.text_input);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Please Enter The Time");
+            builder.setView(R.layout.user_input);
+            builder.setPositiveButton("OK", this);
+            builder.setNegativeButton("Cancel", this);
+            builder.show();
         } else {
             Toast.makeText(this, "OFF", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        switch (which) {
+            case DialogInterface.BUTTON_POSITIVE:
+                Toast.makeText(this, "ok, clicked", Toast.LENGTH_SHORT).show();
+                break;
+            case DialogInterface.BUTTON_NEGATIVE:
+                Toast.makeText(this, "cancel clicked", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 }

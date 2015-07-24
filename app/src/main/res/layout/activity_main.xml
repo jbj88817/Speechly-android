@@ -39,7 +39,7 @@
         android:textOn=""
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="72dp"
         android:background="@drawable/toggle_selector"/>
 
 
