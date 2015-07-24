@@ -19,12 +19,13 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener,
-        DialogInterface.OnClickListener{
+        DialogInterface.OnClickListener {
 
     private TextView mTextTime;
     private Handler mHandler;
     private long timeRemaining = 5000;
     private ToggleButton mToggleButton;
+    private EditText mTextUserInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,18 +82,18 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
-            Toast.makeText(this, "ON", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "ON", Toast.LENGTH_SHORT).show();
             LayoutInflater inflater = LayoutInflater.from(this);
             View view = inflater.inflate(R.layout.user_input, null);
-            EditText textUserInput = (EditText) view.findViewById(R.id.text_input);
+            mTextUserInput = (EditText) view.findViewById(R.id.text_input);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Please Enter The Time");
-            builder.setView(R.layout.user_input);
+            builder.setView(view);
             builder.setPositiveButton("OK", this);
             builder.setNegativeButton("Cancel", this);
             builder.show();
         } else {
-            Toast.makeText(this, "OFF", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "OFF", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -100,10 +101,28 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
-                Toast.makeText(this, "ok, clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "ok, clicked", Toast.LENGTH_SHORT).show();
+                String input = mTextUserInput.getText().toString();
+                if (input != null) {
+                    String inputTrimmed = input.trim();
+                    int indexOfColon = inputTrimmed.indexOf(':');
+                    if (inputTrimmed.length() == 5 && indexOfColon == 2) {
+                        try {
+                            int minutes = Integer.parseInt(inputTrimmed.substring(0, 2));
+                            int seconds = Integer.parseInt(inputTrimmed.substring(3, inputTrimmed.length()));
+                            long milliseconds = (minutes * 60 + seconds) * 1000;
+                            Toast.makeText(getApplicationContext(), minutes + " minutes " + seconds + " seconds " + milliseconds + " milliseconds", Toast.LENGTH_LONG).show();
+                        } catch (NumberFormatException e) {
+                            // input is invaild number here
+                        }
+
+                    }
+                }
+
+
                 break;
             case DialogInterface.BUTTON_NEGATIVE:
-                Toast.makeText(this, "cancel clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "cancel clicked", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
