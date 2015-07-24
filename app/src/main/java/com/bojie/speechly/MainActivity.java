@@ -41,7 +41,13 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         mTimer = new SpeechlyTimer(mHandler) {
             @Override
             public void updateUI(long timeRemaining) {
-                mTextTime.setText(timeRemaining + "");
+
+                mTextTime.setText(SpeechlyTimer.convertMillisecondsToString(timeRemaining));
+            }
+
+            @Override
+            public void onTimerStopped() {
+                mToggleButton.setChecked(false);
             }
         };
 
@@ -94,29 +100,17 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             case DialogInterface.BUTTON_POSITIVE:
                 //Toast.makeText(this, "ok, clicked", Toast.LENGTH_SHORT).show();
                 String input = mTextUserInput.getText().toString();
-                if (input != null) {
-                    String inputTrimmed = input.trim();
-                    int indexOfColon = inputTrimmed.indexOf(':');
-                    if (inputTrimmed.length() == 5 && indexOfColon == 2) {
-                        try {
-                            int minutes = Integer.parseInt(inputTrimmed.substring(0, 2));
-                            int seconds = Integer.parseInt(inputTrimmed.substring(3, inputTrimmed.length()));
-                            long milliseconds = (minutes * 60 + seconds) * 1000;
-                            mTimer.setTimeRemaining(milliseconds);
-                            mTimer.start();
-                            Toast.makeText(getApplicationContext(), "Timer set to " + minutes + " minutes " + seconds + " seconds " + milliseconds + " milliseconds", Toast.LENGTH_LONG).show();
-
-
-                        } catch (NumberFormatException e) {
-                            // input is invaild number here
-                        }
-
-                    }
+                if (SpeechlyTimer.isValidInput(input)) {
+                        mTimer.setTimeRemaining(SpeechlyTimer.convertToMilliseconds(getApplicationContext(), input));
+                        mTimer.start();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please input valid time, such that 08:05", Toast.LENGTH_LONG).show();
                 }
                 break;
 
             case DialogInterface.BUTTON_NEGATIVE:
                 //Toast.makeText(this, "cancel clicked", Toast.LENGTH_SHORT).show();
+                mToggleButton.setChecked(false);
                 break;
         }
     }
