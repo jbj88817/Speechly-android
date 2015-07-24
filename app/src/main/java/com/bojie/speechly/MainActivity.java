@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,9 +22,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     private TextView mTextTime;
     private Handler mHandler;
-    private long timeRemaining = 5000;
     private ToggleButton mToggleButton;
     private EditText mTextUserInput;
+    private SpeechlyTimer mTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,22 +37,14 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         // ToggleButton
         mToggleButton = (ToggleButton) findViewById(R.id.toggleButton);
         mToggleButton.setOnCheckedChangeListener(this);
-
         mHandler = new Handler();
-
-        Runnable runnable = new Runnable() {
+        mTimer = new SpeechlyTimer(mHandler) {
             @Override
-            public void run() {
-                Log.d("Bojie", "run was called");
-                timeRemaining -= 1000;
-                if (timeRemaining > 0) {
-                    mHandler.postDelayed(this, 1000);
-                }
-
+            public void updateUI(long timeRemaining) {
+                mTextTime.setText(timeRemaining + "");
             }
         };
 
-        mHandler.postDelayed(runnable, 1000);
     }
 
 
@@ -111,16 +102,19 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                             int minutes = Integer.parseInt(inputTrimmed.substring(0, 2));
                             int seconds = Integer.parseInt(inputTrimmed.substring(3, inputTrimmed.length()));
                             long milliseconds = (minutes * 60 + seconds) * 1000;
-                            Toast.makeText(getApplicationContext(), minutes + " minutes " + seconds + " seconds " + milliseconds + " milliseconds", Toast.LENGTH_LONG).show();
+                            mTimer.setTimeRemaining(milliseconds);
+                            mTimer.start();
+                            Toast.makeText(getApplicationContext(), "Timer set to " + minutes + " minutes " + seconds + " seconds " + milliseconds + " milliseconds", Toast.LENGTH_LONG).show();
+
+
                         } catch (NumberFormatException e) {
                             // input is invaild number here
                         }
 
                     }
                 }
-
-
                 break;
+
             case DialogInterface.BUTTON_NEGATIVE:
                 //Toast.makeText(this, "cancel clicked", Toast.LENGTH_SHORT).show();
                 break;
